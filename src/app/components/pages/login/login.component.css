@@ -1,0 +1,11 @@
+.card {
+    width: 400px;
+    margin: 0;
+}
+
+button:disabled {
+    background-color: gray !important;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.6;
+}
