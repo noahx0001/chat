@@ -8,7 +8,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  private apiURI = 'http://127.0.0.1:8000/api/v1';
+  private apiURI = 'http://192.168.1.66:8000/api/v1';
   login(data: any): Observable<any> {
     return this.http.post(this.apiURI + '/login', data);
   }

@@ -1,1 +1,28 @@
-<p>chat works!</p>
+<div class="main-container d-flex justify-content-center align-items-center bg-black">
+    <div class="card">
+        <div class="card-header text-center py-2">
+            <h1>Chat Global</h1>
+        </div>
+        <div class="card-body p-0 d-flex flex-column">
+            <div class="messages-container flex-grow-1">
+                <div class="messages-wrapper">
+                    <div class="message-item" *ngFor="let message of messages">
+                        <strong>{{ message.user }}:</strong> {{ message.message }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer py-2">
+            <form [formGroup]="form" (ngSubmit)="sendMessage()">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Escribe un mensaje..."
+                        formControlName="message">
+                    <button class="btn btn-primary" [disabled]="!form.valid">
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<p-toast position="bottom-right" key="br"></p-toast>

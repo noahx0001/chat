@@ -21,7 +21,9 @@
     "@popperjs/core": "^2.11.8",
     "@primeng/themes": "^19.0.9",
     "bootstrap": "^5.3.3",
+    "laravel-echo": "^2.0.2",
     "primeng": "^19.0.9",
+    "pusher-js": "^8.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
