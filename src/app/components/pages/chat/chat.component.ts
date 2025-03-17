@@ -24,15 +24,31 @@ export class ChatComponent {
 
   get message() { return this.form.get('message'); }
 
-  constructor(private messageService: MessagesService, private messagePrime: MessageService, private cdr: ChangeDetectorRef) {
-    echo.channel('chat').listen('.new-message', (data: { user: string, message: string }) => {
-      this.messages.push(data);
-      this.cdr.detectChanges();
-    })
-  }
+  constructor(private messageService: MessagesService, private messagePrime: MessageService, private cdr: ChangeDetectorRef) { }
 
+  // Se ejecuta al iniciar el componente
+  ngOnInit() {
+    this.setupEchoConnection()
+  }
   ngAfterViewChecked() {
     this.scrollToBottom();
+  }
+
+  private setupEchoConnection() {
+    // Maneja el evento de conexión a pusher
+    echo.connector.pusher.connection.bind('connected', () => {
+      this.showAlert('success', 'Success', 'Server Pusher connection success.');
+      echo.channel('chat').listen('.new-message', (data: { user: string, message: string }) => {
+        this.messages.push(data); // Agrega el mensaje a la lista de mensajes
+        this.cdr.detectChanges(); // Notifico a Angular que el componente ha cambiado
+      })
+    })
+
+    // Maneja el evento de desconexión de pusher
+    echo.connector.pusher.connection.bind('disconnected', (error: any) => {
+      console.error('Disconnected from Pusher', error);
+      this.showAlert('error', 'Error', 'Server Pusher connection error.');
+    })
   }
 
   private scrollToBottom(): void {
