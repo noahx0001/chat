@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
 import { echo } from '../../../echo-config';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl, Validators, FormGroup } from '@angular/forms';
@@ -6,7 +6,6 @@ import { MessagesService } from '../../../services/messages.service';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastModule } from 'primeng/toast';
-import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-chat',
   imports: [CommonModule, ReactiveFormsModule, ToastModule],
@@ -21,6 +20,8 @@ export class ChatComponent {
     message: new FormControl('', [Validators.required, Validators.maxLength(255)])
   })
 
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+
   get message() { return this.form.get('message'); }
 
   constructor(private messageService: MessagesService, private messagePrime: MessageService, private cdr: ChangeDetectorRef) {
@@ -28,6 +29,19 @@ export class ChatComponent {
       this.messages.push(data);
       this.cdr.detectChanges();
     })
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      const element = this.scrollContainer.nativeElement;
+      element.scrollTop = element.scrollHeight;
+    } catch (err) {
+      console.error('Error al desplazar el scroll:', err);
+    }
   }
 
   showAlert(severity: string, summary: string, detail: string) {
