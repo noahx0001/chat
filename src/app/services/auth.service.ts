@@ -18,7 +18,7 @@ export class AuthService {
   }
 
   logout() {
-    return this.http.get(this.apiURI + '/logout');
+    return this.http.post(this.apiURI + '/logout', {});
   }
 
   isAuthenticated() {
@@ -29,5 +29,9 @@ export class AuthService {
     } else {
       return false;
     }
+  }
+
+  user(): Observable<any> {
+    return this.http.get(this.apiURI + '/user');
   }
 }

@@ -6,6 +6,7 @@ import { MessagesService } from '../../../services/messages.service';
 import { MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastModule } from 'primeng/toast';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-chat',
   imports: [CommonModule, ReactiveFormsModule, ToastModule],
@@ -22,20 +23,17 @@ export class ChatComponent {
 
   get message() { return this.form.get('message'); }
 
-  constructor(private messageService: MessagesService, private messagePrime: MessageService) { }
-
-  ngOnInit() {
-    this.listenForMessages();
+  constructor(private messageService: MessagesService, private messagePrime: MessageService, private cdr: ChangeDetectorRef) {
+    echo.channel('chat').listen('.new-message', (data: { user: string, message: string }) => {
+      this.messages.push(data);
+      this.cdr.detectChanges();
+    })
   }
 
   showAlert(severity: string, summary: string, detail: string) {
     this.messagePrime.add({ severity: severity, summary: summary, detail: detail, key: 'br', life: 3000 });
   }
-  listenForMessages() {
-    echo.channel('chat').listen('.new-message', (data: { user: string, message: string }) => {
-      this.messages.push(data);
-    })
-  }
+
 
   sendMessage() {
 
